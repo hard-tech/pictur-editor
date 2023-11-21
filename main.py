@@ -1,3 +1,6 @@
+
+# Storie 1 :
+
 from PIL import Image
 
 # Demmander à l'utilisateur le nom de l'image à modifier
