@@ -1,156 +1,124 @@
+from PIL import Image
 from PIL import Image, ImageFilter
+import cv2
+import numpy as np
 import os
 
 original_picture = './original_picture/'
-modify_picture = './modify_picture/'
+modify_picture = './original_picture/'
 
 def ls_original_pic():
     fichiers = os.listdir(original_picture)
-
-    print(f'\nListe des fichier dans {original_picture} :')
+    print(f'\nListe des fichiers dans {original_picture} :')
     for fichier in fichiers:
         print(fichier)
 
 def ls_modify_pic():
     fichiers = os.listdir(modify_picture)
-
-    print(f'\nListe des fichier dans {modify_picture} : ')
+    print(f'\nListe des fichiers dans {modify_picture} : ')
     for fichier in fichiers:
         print(fichier)
 
-def save_picture(Oject, Path, Name):
-    Oject.save(f'{Path}{Name}')
+def save_picture(object, path, name):
+    object.save(f'{path}{name}')
 
-# Storie 1 :
-def convert_black_and_white():
-    # Demmander à l'utilisateur le nom de l'image à modifier
-    image_nom = input('\nQuelle est le nom de vôtre image ? : ')
+def load_picture(picture_name):
+    image = Image.open(f'{original_picture}{picture_name}')
+    return image
 
+def image_transformation(operation):
+    image_name = input('\nQuel est le nom de votre image ? : ')
     try:
-        # Charger l'image
-        image = Image.open(f'{original_picture}{image_nom}')
-        if(os.path.exists(f'{modify_picture}{image_nom}')):
-            print("\nL'image existe déjà ! \n")
-        else:
-            # Convertire l'image en Noir & Blanc
-            image_noir_et_blanc = image.convert('L')
-            # image_noir_et_blanc.show()
+        # -- Story 1  -- #
+        if operation == "convert_black_and_white":
+            # Charge l'image
+            image = load_picture(image_name)
 
-            # Sauvegarder l'image dans ./modify_picture
-            save_picture(image_noir_et_blanc, modify_picture, image_nom)
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Convertir l'image en noir et blanc
+                image_noir_et_blanc = image.convert('L')
+
+                # Sauvegarde de l'image transformé
+                save_picture(image_noir_et_blanc, modify_picture, image_name)
+                
+                print("\nL'image a bien été transformée. \n")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
+
+        # -- Story 2  -- #
+        elif operation == "convert_blur":
+            # Charge l'image
+            image = load_picture(image_name)
             
-            # Retourner à l'utilisateur l'états de l'action (si err la retourné)
-            print("\nL'image a bien été transformé. \n")
-            ls_modify_pic()
-    except:
-        print("\nNous n'avons pas pu ouverire le fichier (le nom de l'image est incorrect).")
-        ls_original_pic()
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Appliquer un flou à l'image
+                image_blur = image.filter(ImageFilter.BLUR)
+                
+                # Sauvegarde de l'image transformé
+                save_picture(image_blur, modify_picture, image_name)
 
-# convert_black_and_white()
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
 
-def convert_Blur():
-    # Demmander à l'utilisateur le nom de l'image à modifier
-    image_nom = input('\n Quelle est le nom de vôtre image ? : ')
-
-    try:
-        # Charger l'image
-        image = Image.open(f'{original_picture}{image_nom}')
-        if(os.path.exists(f'{modify_picture}{image_nom}')):
-            print("\nL'image existe déjà ! \n")
-        else:
-            # Convertire l'image en Noir & Blanc
-            image_noir_et_blanc = image.convert('L')
-            # image_noir_et_blanc.show()
-
-            # Sauvegarder l'image dans ./modify_picture
-            save_picture(image_noir_et_blanc, modify_picture, image_nom)
+        # -- Story 3  -- #
+        elif operation == "dilate_image":
+            # Charge l'image
+            image = load_picture(image_name)
             
-            # Retourner à l'utilisateur l'états de l'action (si err la retourné)
-            print("\nL'image a bien été transformé. \n")
-            ls_modify_pic()
-    except:
-        print("\nNous n'avons pas pu ouverire le fichier (le nom de l'image est incorrect).")
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                image = cv2.imread(f'{original_picture}/{image_name}')
+                # Dilater l'image
+                image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                kernel = np.ones((5, 5), np.uint8)
+                image_dilated = cv2.dilate(image_gray, kernel, iterations=1)
+
+                # Sauvegarde de l'image transformé
+                cv2.imwrite(f'{modify_picture}/{image_name}', image_dilated)
+
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
+
+        # -- Story 4  -- #
+        elif operation == "convert_rotate":
+            # Faire pivoter l'image
+            value_rotate = input('\nDéterminez de combien vous voulez faire pivoter l\'image : ')
+            # Charge l'image
+            image = load_picture(image_name)
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Faire pivoter l'image
+                image_rotate = image.rotate(int(value_rotate))
+                image_rotate.save(f'{modify_picture}/{image_name}')
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
+
+        # -- Story X  -- #
+        # elif operation == "...":
+        
+        else:
+            print("\nOpération non reconnue.")
+
+    except Exception as e:
+        print(f"\nErr ({e}) --Veuillez vérifier le nom du fichier.")
         ls_original_pic()
 
-# convert_black_and_white()
+# -- Appel des fonctions pour chaque opération sur l'image -- #
 
-def convert_Blur():
-    # Demmander à l'utilisateur le nom de l'image à modifier
-    image_nom = input('\n Quelle est le nom de vôtre image ? : ')
-
-    try:
-        # Charger l'image
-        image = Image.open(f'./original_picture/{image_nom}')
-
-        # Convertire l'image en Noir & Blanc
-        image_blur = image.filter(ImageFilter.BLUR)
-        # image_blur.show()
-
-        # Sauvegarder l'image dans ./modify_picture
-        image_blur.save(f'./modify_picture/{image_nom}')
-        
-        # Retourner à l'utilisateur l'états de l'action (si err la retourné)
-        print("\nL'image a bien été transformé.")
-        ls_modify_pic()
-        
-    except:
-        print("nous n'avons pas pu ouverire le fichier (nom d'image incorrect).")
-        ls_original_pic()
-        print('\n')
-
-# convert_black_and_white()
-
-# Storie 2:
-def convert_Blur():
-    # Demmander à l'utilisateur le nom de l'image à modifier
-    image_nom = input('\n Quelle est le nom de vôtre image ? : ')
-
-    try:
-        # Charger l'image
-        image = Image.open(f'./original_picture/{image_nom}')
-
-        # Convertire l'image en Noir & Blanc
-        image_blur = image.filter(ImageFilter.BLUR)
-        # image_blur.show()
-
-        # Sauvegarder l'image dans ./modify_picture
-        image_blur.save(f'./modify_picture/{image_nom}')
-        
-        # Retourner à l'utilisateur l'états de l'action (si err la retourné)
-        print("\nL'image a bien été transformé.")
-        ls_modify_pic()
-        
-    except:
-        print("nous n'avons pas pu ouverire le fichier (nom d'image incorrect).")
-        ls_original_pic()
-        print('\n')
-
-# convert_Blur()
-
-# Storie 4:
-def convert_rotate():
-    # Demmander à l'utilisateur le nom de l'image à modifier
-    image_nom = input('\n Quelle est le nom de vôtre image ? : ')
-    value_rotate = input('\n Déterminez de combien voulez-vous faire pivoter l\'image : ')
-
-    try:
-        # Charger l'image
-        image = Image.open(f'./original_picture/{image_nom}')
-
-        # Convertire l'image en Noir & Blanc
-        image_rotate = image.rotate(int(value_rotate))
-        # image_rotate.show()
-
-        # Sauvegarder l'image dans ./modify_picture
-        image_rotate.save(f'./modify_picture/{image_nom}')
-        
-        # Retourner à l'utilisateur l'états de l'action (si err la retourné)
-        print("\nL'image a bien été transformé.")
-        ls_modify_pic()
-        
-    except:
-        print("nous n'avons pas pu ouvrir le fichier (nom d'image incorrect).")
-        ls_original_pic()
-        print('\n')
-
-# convert_rotate()
+# image_transformation("convert_black_and_white")
+# image_transformation("convert_blur")
+# image_transformation("dilate_image")
+# image_transformation("convert_rotate")
