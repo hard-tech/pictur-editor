@@ -1,8 +1,8 @@
-from PIL import Image
+from PIL import Image, ImageFilter
 import os
 
 original_picture = './original_picture/'
-modify_picture = './original_picture/'
+modify_picture = './modify_picture/'
 
 def ls_original_pic():
     fichiers = os.listdir(original_picture)
@@ -42,4 +42,30 @@ def convert_black_and_white():
         ls_original_pic()
         print('\n')
 
-convert_black_and_white()
+# convert_black_and_white()
+
+def convert_Blur():
+    # Demmander à l'utilisateur le nom de l'image à modifier
+    image_nom = input('\n Quelle est le nom de vôtre image ? : ')
+
+    try:
+        # Charger l'image
+        image = Image.open(f'./original_picture/{image_nom}')
+
+        # Convertire l'image en Noir & Blanc
+        image_blur = image.filter(ImageFilter.BLUR)
+        # image_blur.show()
+
+        # Sauvegarder l'image dans ./modify_picture
+        image_blur.save(f'./modify_picture/{image_nom}')
+        
+        # Retourner à l'utilisateur l'états de l'action (si err la retourné)
+        print("\nL'image a bien été transformé.")
+        ls_modify_pic()
+        
+    except:
+        print("nous n'avons pas pu ouverire le fichier (nom d'image incorrect).")
+        ls_original_pic()
+        print('\n')
+
+# convert_Blur()
