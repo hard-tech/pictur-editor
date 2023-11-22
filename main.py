@@ -1,4 +1,3 @@
-from PIL import Image
 from PIL import Image, ImageFilter
 import cv2
 import numpy as np
@@ -113,21 +112,31 @@ def image_transformation(operation):
             else:
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
+
+        # -- Story 5  -- #
         elif operation == "convert_resize":
             # Demander la nouvelle taille de l'image
-            value_resize = input('\nDéterminez la nouvelle taille de votre image : ')
+            value_height = int(input('\nDéterminez la nouvelle hauteur de votre image : '))
+            value_width = int(input('\nDéterminez la nouvelle largeur de votre image : '))
+
             # Chargement l'image
-            image = load_picture(image_name)
+            image = cv2.imread(f'{original_picture}/{image_name}')
+            
             # Vérifier si l'image transformée existe déjà
             if image is not None:
                 # Changer la taille de l'image
-                image_rotate = image.resize(int(value_resize))
-                image_rotate.save(f'{modify_picture}/{image_name}')
+                image_resize = cv2.resize(image, (value_width, value_height), interpolation=cv2.INTER_AREA)
+                
+                # Sauvegarde de l'image transformé
+                cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
+
+                # Retour l'état final à l'utilisateur
                 print("\nL'image a bien été transformée.")
                 ls_modify_pic()
             else:
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
+        
         # -- Story X  -- #
         # elif operation == "...":
         
