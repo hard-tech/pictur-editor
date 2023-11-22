@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 original_picture = './original_picture/'
-modify_picture = './original_picture/'
+modify_picture = './modify_picture/'
 
 def ls_original_pic():
     fichiers = os.listdir(original_picture)
