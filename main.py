@@ -19,10 +19,13 @@ def image_transformation(filters,input_folder:str,output_picture:str):
     operation = filters.split('&')
 
     def ls_original_pic():
-        fichiers = os.listdir(original_picture)
-        print(f'\nListe des fichiers dans {original_picture} :')
-        for fichier in fichiers:
-            print(fichier)
+        try:
+            fichiers = os.listdir(original_picture)
+            print(f'\nListe des fichiers dans {original_picture} :')
+            for fichier in fichiers:
+                print(fichier)
+        except:
+            print(f'Imposible de lister les fichier contenue dans : {original_picture}')
 
     # def ls_modify_pic():
     #     fichiers = os.listdir(modify_picture)
@@ -31,10 +34,16 @@ def image_transformation(filters,input_folder:str,output_picture:str):
     #         print(fichier)
 
     def save_picture(object, path, name):
-        object.save(f'{path}{name}')
+        try:
+            object.save(f'{path}{name}')
+        except:
+            print(f"\nImpossible de sauvegarder l'image.\n")
 
     def load_picture(picture_name):
-        image = Image.open(f'{original_picture}{picture_name}')
+        try:
+            image = Image.open(f'{original_picture}{picture_name}')
+        except:
+            print(f"\nImpossible de charger l'image.\n")
         return image
 
     
@@ -58,8 +67,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     # Charge l'image
                     image = load_picture(image_name)
 
-                    # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    try:
                         # Convertir l'image en noir et blanc
                         image_noir_et_blanc = image.convert('L')
 
@@ -67,10 +75,10 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         save_picture(image_noir_et_blanc, modify_picture, image_name)
                         
                         # Retour l'état final à l'utilisateur
-                        print("\nL'image a bien été transformée en noir et blanc.\n")
-                    else:
+                        print(f"\nL'image '{image_name}' a bien été transformée en noir et blanc.\n")
+                    except :
                         # Retour erreur
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
+                        print(f"\nImpossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
 
                 # -- Story 2  -- #
                 elif param_filter == "convert_blur":
@@ -79,7 +87,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     image = load_picture(image_name)
                     
                     # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    try:
                         # Appliquer un flou à l'image
                         image_blur = image.filter(ImageFilter.BLUR)
                         
@@ -87,10 +95,10 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         save_picture(image_blur, modify_picture, image_name)
 
                         # Retour l'état final à l'utilisateur
-                        print("\nL'image a bien été floutée.\n")
-                    else:
+                        print(f"\nL'image '{image_name}' a bien été floutée.\n")
+                    except :
                         # Retour erreur
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
+                        print(f"\nImpossible de floutée l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                 # -- Story 3  -- #
                 elif param_filter == "dilate_image":
@@ -99,7 +107,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     image = load_picture(image_name)
                     
                     # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    try:
                         # Charge l'image
                         image = cv2.imread(f'{original_picture}{image_name}')
                         
@@ -112,10 +120,10 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         cv2.imwrite(f'{modify_picture}{image_name}', image_dilated)
 
                         # Retour l'état final à l'utilisateur
-                        print("\nL'image a bien été dilater.\n")
-                    else:
+                        print(f"\nL'image '{image_name}' a bien été dilater.\n")
+                    except :
                         # Retour erreur
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
+                        print(f"\nImpossible de dilaté l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                 # -- Story 4  -- #
                 elif param_filter == f"convert_rotate:{param_filter.split(':')[1]}":
@@ -125,7 +133,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     # Charge l'image
                     image = load_picture(image_name)
                     # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    try:
                         # Faire pivoter l'image
                         image_rotate = image.rotate(int(value_rotate))
 
@@ -133,35 +141,37 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         save_picture(image_rotate,modify_picture,image_name)
                         
                         # Retour l'état final à l'utilisateur
-                        print(f"\nL'image a bien été tournée de {value_rotate}°.")
-                    else:
+                        print(f"\nL'image '{image_name}' a bien été tournée de {value_rotate}°.")
+                    except :
                         # Retour erreur
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
+                        print(f"\nImpossible d'effectuer une rotation de {value_rotate}° sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
                 
                 # -- Story 5  -- #
                 elif param_filter == f"convert_resize:{param_filter.split(':')[1]}":
-                    
-                    # Récupérer la nouvelle taille de l'image
-                    width_and_height = param_filter.split(':')[1]
-                    value_height = int(width_and_height.split(';')[0])
-                    value_width = int(width_and_height.split(';')[1])
+                    # Demander la nouvelle taille de l'image
+                    scaling = param_filter.split(':')[1]
+                    scaling = float(scaling)
 
                     # Chargement l'image
-                    image = cv2.imread(f'{original_picture}{image_name}')
-                    
-                    # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    image = cv2.imread(f'{original_picture}/{image_name}')
+                    height, width = image.shape[:2]
+                    # Vérifier si l'image transformée existe déjà
+
+                    try:
                         # Changer la taille de l'image
-                        image_resize = cv2.resize(image, (value_width, value_height), interpolation=cv2.INTER_AREA)
-                        
+                        image_resize = cv2.resize(image, ((int(scaling *width), int(scaling *height))), interpolation=cv2.INTER_AREA)
+
                         # Sauvegarde de l'image transformé
-                        cv2.imwrite(f'{modify_picture}{image_name}', image_resize)
+                        cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
 
                         # Retour l'état final à l'utilisateur
-                        print("\nL'image a bien été redimensionner.")
-                    else:
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
-                
+                        print(f"\nLa taille de l'image '{image_name}' a bien été modifiée.")
+                        # logger.log('une erreur s\'est produite lors de l\'execution de la demande' + '\n')
+                    except :
+                        print(f"\nImpossible de charger l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                        ls_original_pic()
+
+
                 # -- Story 6  -- #
                 elif param_filter == f"add_text:{param_filter.split(':')[1]}":
                     
@@ -173,7 +183,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     image = cv2.imread(f'{original_picture}{image_name}')
                     
                     # Vérifier si l'image s'ouvre
-                    if image is not None:
+                    try:
                         # Obtenir les dimensions de l'image
                         image_height, image_width = image.shape[:2]
 
@@ -198,14 +208,14 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         cv2.imwrite(f'{modify_picture}{image_name}', image_with_text)
                         
                         # Retour l'état final à l'utilisateur
-                        print("\nLe texte à bien été ajouter à l'image.\n")
-                    else:
+                        print(f"\nLe texte à bien été ajouter sur l'image '{image_name}'.\n")
+                    except :
                         # Retour erreur
-                        print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.\n")
+                        print(f"\nImpossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                 else:
                     # Retour erreur commande
-                    print("\nOpération non reconnue.")
+                    print(f"\nOpération non reconnue.")
 
             except:
                 print(f"\nUne erreur c'est produite lors de la transformation d'un fichier.")
