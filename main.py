@@ -78,7 +78,9 @@ def image_transformation(operation):
             
             # Vérifier si l'image transformée existe déjà
             if image is not None:
+                # Charge l'image
                 image = cv2.imread(f'{original_picture}/{image_name}')
+                
                 # Dilater l'image
                 image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 kernel = np.ones((5, 5), np.uint8)
