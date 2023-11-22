@@ -1,6 +1,7 @@
 from PIL import Image
 from PIL import Image, ImageFilter
 import cv2
+import logger
 import numpy as np
 import os
 import sys
