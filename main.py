@@ -7,11 +7,15 @@ import sys
 
 arguments = sys.argv
 
-def image_transformation(filters,image_names:str,output_picture:str):
+def image_transformation(filters,input_folder:str,output_picture:str):
 
-    original_picture = './original_picture/'
+    def cat_folder_element(folder):
+        folder_elements = os.listdir(folder)
+        return folder_elements
+
+    original_picture = input_folder
     modify_picture = output_picture
-    image_names = image_names.split('&')
+    image_names = cat_folder_element(input_folder)
     print(image_names)
 
     operation = filters.split('&')
@@ -36,13 +40,20 @@ def image_transformation(filters,image_names:str,output_picture:str):
         image = Image.open(f'{original_picture}{picture_name}')
         return image
 
-    i = 0
+    
+    # Pour chaque image du dossier faire ...
+    for image_name in image_names:        
+        i = 0
 
-    for image_name in image_names:
-        print(image_name)
+        # Pour chaque paramètre appliquer à l'image ...
         for param_filter in operation:
+
+            # Si le filtre appliquer est suppérieur à 1 prendre l'image dans modify_picture
             if i >= 1:
-                original_picture = output_picture
+                original_picture = modify_picture
+            else:
+                original_picture = input_folder
+
             try:
                 # -- Story 1  -- #
                 if param_filter == "convert_black_and_white":
@@ -60,6 +71,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                         
                         # Retour l'état final à l'utilisateur
                         print("\nL'image a bien été transformée. \n")
+                        print()
                         ls_modify_pic()
                     else:
                         # Retour erreur
@@ -97,7 +109,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                     # Vérifier si l'image transformée existe déjà
                     if image is not None:
                         # Charge l'image
-                        image = cv2.imread(f'{original_picture}/{image_name}')
+                        image = cv2.imread(f'{original_picture}{image_name}')
                         
                         # Dilater l'image
                         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -105,7 +117,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                         image_dilated = cv2.dilate(image_gray, kernel, iterations=1)
 
                         # Sauvegarde de l'image transformé
-                        cv2.imwrite(f'{modify_picture}/{image_name}', image_dilated)
+                        cv2.imwrite(f'{modify_picture}{image_name}', image_dilated)
 
                         # Retour l'état final à l'utilisateur
                         print("\nL'image a bien été transformée.")
@@ -147,7 +159,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                     value_width = int(width_and_height.split(';')[1])
 
                     # Chargement l'image
-                    image = cv2.imread(f'{original_picture}/{image_name}')
+                    image = cv2.imread(f'{original_picture}{image_name}')
                     
                     # Vérifier si l'image transformée existe déjà
                     if image is not None:
@@ -155,7 +167,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                         image_resize = cv2.resize(image, (value_width, value_height), interpolation=cv2.INTER_AREA)
                         
                         # Sauvegarde de l'image transformé
-                        cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
+                        cv2.imwrite(f'{modify_picture}{image_name}', image_resize)
 
                         # Retour l'état final à l'utilisateur
                         print("\nL'image a bien été transformée.")
@@ -172,7 +184,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                     text_to_add = text_param
 
                     # Charge l'image
-                    image = cv2.imread(f'{original_picture}/{image_name}')
+                    image = cv2.imread(f'{original_picture}{image_name}')
                     
                     # Vérifier si l'image transformée existe déjà
                     if image is not None:
@@ -181,9 +193,9 @@ def image_transformation(filters,image_names:str,output_picture:str):
 
                         # Définir les paramètres du texte à ajouter
                         font = cv2.FONT_HERSHEY_SIMPLEX
-                        font_scale = 1
+                        font_scale = 5
                         color = (255, 255, 255)  # Couleur du texte en BGR (blanc dans notre cas)
-                        thickness = 4
+                        thickness = 6
 
                         # Mesurer la taille du texte pour le centrer
                         text_size = cv2.getTextSize(text_to_add, font, font_scale, thickness)[0]
@@ -197,7 +209,7 @@ def image_transformation(filters,image_names:str,output_picture:str):
                         image_with_text = cv2.putText(image, text_to_add, (text_x, text_y), font, font_scale, color, thickness)
 
                         # Sauvegarde de l'image transformé
-                        cv2.imwrite(f'{modify_picture}/{image_name}', image_with_text)
+                        cv2.imwrite(f'{modify_picture}{image_name}', image_with_text)
                         
                         # Retour l'état final à l'utilisateur
                         print("\nL'image a bien été transformée.")
@@ -218,29 +230,23 @@ def image_transformation(filters,image_names:str,output_picture:str):
                 ls_original_pic()
             i+=1
 
-# -- Appel des fonctions pour chaque opération sur l'image -- #
 
-# image_transformation("convert_black_and_white")
-# image_transformation("convert_blur")
-# image_transformation("dilate_image")
-# image_transformation("convert_rotate")
-# image_transformation("convert_resize")
-# image_transformation("add_text")
-
+# init valeurs
 x = 0
-image_name=''
+input_folder=''
 filters=''
 output_folder = ''
 
+# Récupère l'index des arguments de la commande
 for cli_name_pic in arguments:
     if cli_name_pic == '--filters':
         filters = arguments[x+1]
 
     if cli_name_pic == '--i':
-        image_names = arguments[x+1]
+        input_folder = f"./{arguments[x+1]}/"
 
     if cli_name_pic == '--o':
-        output_folder = arguments[x+1]
+        output_folder = f"./{arguments[x+1]}/"
     x+=1
 
-image_transformation(filters, image_names, output_folder)
+image_transformation(filters, input_folder, output_folder)
