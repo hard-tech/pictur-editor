@@ -99,7 +99,7 @@ def image_transformation(operation):
 
         # -- Story 4  -- #
         elif operation == "convert_rotate":
-            # Faire pivoter l'image
+            # Demander l'angle de rotation de l'image
             value_rotate = input('\nDéterminez de combien vous voulez faire pivoter l\'image : ')
             # Charge l'image
             image = load_picture(image_name)
@@ -107,18 +107,27 @@ def image_transformation(operation):
             if image is not None:
                 # Faire pivoter l'image
                 image_rotate = image.rotate(int(value_rotate))
-
-                # Sauvegarde de l'image transformé
-                save_picture(image_rotate,modify_picture,image_name)
-                
-                # Retour l'état final à l'utilisateur
+                image_rotate.save(f'{modify_picture}/{image_name}')
                 print("\nL'image a bien été transformée.")
                 ls_modify_pic()
             else:
-                # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
-
+        elif operation == "convert_resize":
+            # Demander la nouvelle taille de l'image
+            value_resize = input('\nDéterminez la nouvelle taille de votre image : ')
+            # Chargement l'image
+            image = load_picture(image_name)
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Changer la taille de l'image
+                image_rotate = image.resize(int(value_resize))
+                image_rotate.save(f'{modify_picture}/{image_name}')
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
         # -- Story X  -- #
         # elif operation == "...":
         
@@ -136,3 +145,4 @@ def image_transformation(operation):
 # image_transformation("convert_blur")
 # image_transformation("dilate_image")
 # image_transformation("convert_rotate")
+image_transformation("convert_resize")
