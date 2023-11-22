@@ -119,6 +119,31 @@ def image_transformation(operation):
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
         
+        # -- Story 5  -- #
+        elif operation == "convert_resize":
+            # Demander la nouvelle taille de l'image
+            value_height = int(input('\nDéterminez la nouvelle hauteur de votre image : '))
+            value_width = int(input('\nDéterminez la nouvelle largeur de votre image : '))
+
+            # Chargement l'image
+            image = cv2.imread(f'{original_picture}/{image_name}')
+            
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Changer la taille de l'image
+                image_resize = cv2.resize(image, (value_width, value_height), interpolation=cv2.INTER_AREA)
+                
+                # Sauvegarde de l'image transformé
+                cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
+
+                # Retour l'état final à l'utilisateur
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
+        
+
         # -- Story 6  -- #
         elif operation == "add_text":
             # Demmander ce que l'utilisateur écrire sur l'image
@@ -173,8 +198,9 @@ def image_transformation(operation):
 
 # -- Appel des fonctions pour chaque opération sur l'image -- #
 
-# image_transformation("convert_black_and_white")
-# image_transformation("convert_blur")
-# image_transformation("dilate_image")
-# image_transformation("convert_rotate")
-image_transformation("add_text")
+    # image_transformation("convert_black_and_white")
+    # image_transformation("convert_blur")
+    # image_transformation("dilate_image")
+    # image_transformation("convert_rotate")
+    # image_transformation("add_text")
+    # image_transformation("convert_resize")
