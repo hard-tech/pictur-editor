@@ -118,6 +118,47 @@ def image_transformation(operation):
                 # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
+        
+        # -- Story 6  -- #
+        elif operation == "add_text":
+            # Demmander ce que l'utilisateur écrire sur l'image
+            text_to_add = input("\nQue voulez vous écrire sur l'image ? : ")
+
+            # Charge l'image
+            image = cv2.imread(f'{original_picture}/{image_name}')
+            
+            # Vérifier si l'image transformée existe déjà
+            if image is not None:
+                # Obtenir les dimensions de l'image
+                image_height, image_width = image.shape[:2]
+
+                # Définir les paramètres du texte à ajouter
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 5
+                color = (255, 255, 255)  # Couleur du texte en BGR (blanc dans notre cas)
+                thickness = 4
+
+                # Mesurer la taille du texte pour le centrer
+                text_size = cv2.getTextSize(text_to_add, font, font_scale, thickness)[0]
+                text_width, text_height = text_size[0], text_size[1]
+
+                # Calculer la position pour centrer le texte
+                text_x = (image_width - text_width) // 2
+                text_y = (image_height + text_height) // 2
+
+                # Ajouter le texte sur l'image
+                image_with_text = cv2.putText(image, text_to_add, (text_x, text_y), font, font_scale, color, thickness)
+
+                # Sauvegarde de l'image transformé
+                cv2.imwrite(f'{modify_picture}/{image_name}', image_with_text)
+                
+                # Retour l'état final à l'utilisateur
+                print("\nL'image a bien été transformée.")
+                ls_modify_pic()
+            else:
+                # Retour erreur
+                print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
+                ls_original_pic()
 
         # -- Story X  -- #
         # elif operation == "...":
@@ -136,3 +177,4 @@ def image_transformation(operation):
 # image_transformation("convert_blur")
 # image_transformation("dilate_image")
 # image_transformation("convert_rotate")
+image_transformation("add_text")
