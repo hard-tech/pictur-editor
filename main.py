@@ -230,15 +230,16 @@ for cli_name_pic in arguments:
 
     if cli_name_pic == '--o':
         output_folder = f"./{arguments[x+1]}/"
-    x+=1
+        
     if cli_name_pic == '--help':
         help = True
     x+=1
 
 if help:
-    help_msg = "\nLes fonction sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n   'convert_resize'\n   'add_text'\n\n Selection multible avec [&] \n (exemple : 'convert_blur&convert_black_and_white')\n"\
-                "--i original_picture --o modify_picture"\
-                ""
+    help_msg = "\nLes fonction sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n   'convert_resize'\n   'add_text'\n\n Selection multible avec [&] \n (exemple : 'convert_blur&convert_black_and_white')\n\n"\
+                " --i 'original_picture' (Nom du dossier contenant les images à modifier)\n\n"\
+                " --o 'modify_picture' (Nom du dossier qui contiendra les images modifier)\n"\
+                "\n"
     print(help_msg)
 else:
     image_transformation(filters, input_folder, output_folder)
