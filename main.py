@@ -63,7 +63,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
             try:
                 # -- Story 1  -- #
                 if param_filter == "convert_black_and_white":
-                    
+                    print("\n---- ### Noir & Blanc ### ----\n")
                     # Charge l'image
                     image = load_picture(image_name)
 
@@ -75,34 +75,39 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         save_picture(image_noir_et_blanc, modify_picture, image_name)
                         
                         # Retour l'état final à l'utilisateur
-                        print(f"\nL'image '{image_name}' a bien été transformée en noir et blanc.\n")
+                        print(f"\nL'image '{image_name}' a bien été transformée en noir et blanc.")
                     except :
                         # Retour erreur
                         print(f"\nImpossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+                    print("\n---- ### ___________ ### ----\n")
 
                 # -- Story 2  -- #
                 elif param_filter == "convert_blur":
-
-                    # Charge l'image
-                    image = load_picture(image_name)
-                    
-                    # Vérifier si l'image s'ouvre
-                    try:
-                        # Appliquer un flou à l'image
-                        image_blur = image.filter(ImageFilter.BLUR)
+                    print("\n---- ### Floutage ### ----\n")
+                    if image_name.split('.')[1] == 'jpeg':
+                        print(f"\nFlouter l'image '{image_name}' n'est pas possible car le format JPEG n'est pas supporter.")
+                    else:
+                        # Charge l'image
+                        image = load_picture(image_name)
                         
-                        # Sauvegarde de l'image transformé
-                        save_picture(image_blur, modify_picture, image_name)
+                        # Vérifier si l'image s'ouvre
+                        try:
+                            # Appliquer un flou à l'image
+                            image_blur = image.filter(ImageFilter.BLUR)
+                            
+                            # Sauvegarde de l'image transformé
+                            save_picture(image_blur, modify_picture, image_name)
 
-                        # Retour l'état final à l'utilisateur
-                        print(f"\nL'image '{image_name}' a bien été floutée.\n")
-                    except :
-                        # Retour erreur
-                        print(f"\nImpossible de floutée l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                            # Retour l'état final à l'utilisateur
+                            print(f"\nL'image '{image_name}' a bien été floutée.")
+                        except :
+                            # Retour erreur
+                            print(f"\nImpossible de floutée l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                    print("\n---- ### ___________ ### ----\n")
 
                 # -- Story 3  -- #
                 elif param_filter == "dilate_image":
-                    
+                    print("\n---- ### Dilatation ### ----\n")
                     # Charge l'image
                     image = load_picture(image_name)
                     
@@ -120,14 +125,16 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         cv2.imwrite(f'{modify_picture}{image_name}', image_dilated)
 
                         # Retour l'état final à l'utilisateur
-                        print(f"\nL'image '{image_name}' a bien été dilater.\n")
+                        print(f"\nL'image '{image_name}' a bien été dilater.")
                     except :
                         # Retour erreur
                         print(f"\nImpossible de dilaté l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                    print("\n---- ### ___________ ### ----\n")
 
                 # -- Story 4  -- #
                 elif param_filter == f"convert_rotate:{param_filter.split(':')[1]}":
                     
+                    print("\n---- ### Rotation ### ----\n")
                     # Faire pivoter l'image
                     value_rotate = param_filter.split(':')[1]
                     # Charge l'image
@@ -145,9 +152,12 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     except :
                         # Retour erreur
                         print(f"\nImpossible d'effectuer une rotation de {value_rotate}° sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
-                
+                    print("\n---- ### ___________ ### ----\n")
+
                 # -- Story 5  -- #
                 elif param_filter == f"convert_resize:{param_filter.split(':')[1]}":
+
+                    print("\n---- ### Redimensionnement ### ----\n")
                     # Demander la nouvelle taille de l'image
                     scaling = param_filter.split(':')[1]
                     scaling = float(scaling)
@@ -170,11 +180,12 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                     except :
                         print(f"\nImpossible de charger l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
                         ls_original_pic()
-
+                    print("\n---- ### ___________ ### ----\n")
 
                 # -- Story 6  -- #
                 elif param_filter == f"add_text:{param_filter.split(':')[1]}":
                     
+                    print("\n---- ### Redimensionnement ### ----\n")
                     # Demmander ce que l'utilisateur écrire sur l'image
                     text_param = param_filter.split(':')[1]
                     text_to_add = text_param
@@ -208,10 +219,11 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         cv2.imwrite(f'{modify_picture}{image_name}', image_with_text)
                         
                         # Retour l'état final à l'utilisateur
-                        print(f"\nLe texte à bien été ajouter sur l'image '{image_name}'.\n")
+                        print(f"\nLe texte à bien été ajouter sur l'image '{image_name}'.")
                     except :
                         # Retour erreur
                         print(f"\nImpossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                    print("\n---- ### ___________ ### ----\n")
 
                 else:
                     # Retour erreur commande
