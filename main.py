@@ -154,4 +154,4 @@ def image_transformation(operation):
 # image_transformation("convert_blur")
 # image_transformation("dilate_image")
 # image_transformation("convert_rotate")
-image_transformation("convert_resize")
+# image_transformation("convert_resize")
