@@ -151,31 +151,31 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         ls_original_pic()
                 
                 # -- Story 5  -- #
-                elif param_filter == f"convert_resize:{param_filter.split(':')[1]}":
-                    
+                elif operation == "convert_resize":
                     # Demander la nouvelle taille de l'image
-                    width_and_height = param_filter.split(':')[1]
-                    value_height = int(width_and_height.split(';')[0])
-                    value_width = int(width_and_height.split(';')[1])
+                    scaling = float(input('\n Déterminez de combien vous voulez modifier votre image : '))
 
                     # Chargement l'image
-                    image = cv2.imread(f'{original_picture}{image_name}')
-                    
+                    image = cv2.imread(f'{original_picture}/{image_name}')
+                    height, width = image.shape[:2]
                     # Vérifier si l'image transformée existe déjà
+
                     if image is not None:
                         # Changer la taille de l'image
-                        image_resize = cv2.resize(image, (value_width, value_height), interpolation=cv2.INTER_AREA)
-                        
+                        image_resize = cv2.resize(image, ((int(scaling *width), int(scaling *height))), interpolation=cv2.INTER_AREA)
+
                         # Sauvegarde de l'image transformé
-                        cv2.imwrite(f'{modify_picture}{image_name}', image_resize)
+                        cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
 
                         # Retour l'état final à l'utilisateur
                         print("\nL'image a bien été transformée.")
                         ls_modify_pic()
+                        logger.log('une erreur s\'est produite lors de l\'execution de la demande' + '\n')
                     else:
                         print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                         ls_original_pic()
-                
+
+                    
                 # -- Story 6  -- #
                 elif param_filter == f"add_text:{param_filter.split(':')[1]}":
                     
