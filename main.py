@@ -83,8 +83,9 @@ def image_transformation(operation):
                 
                 # Dilater l'image
                 image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                kernel = np.ones((5, 5), np.uint8)
-                image_dilated = cv2.dilate(image_gray, kernel, iterations=1)
+                expansion_effect = np.ones((5, 5), np.uint8)
+                # expension veut dire dilatation en anglais
+                image_dilated = cv2.dilate(image_gray, expansion_effect, iterations=1)
 
                 # Sauvegarde de l'image transformé
                 cv2.imwrite(f'{modify_picture}/{image_name}', image_dilated)
@@ -162,7 +163,7 @@ def image_transformation(operation):
                 font_scale = 5
                 color = (255, 255, 255)  # Couleur du texte en BGR (blanc dans notre cas)
                 thickness = 4
-
+                # thickness veut dire épaisseur en anglais
                 # Mesurer la taille du texte pour le centrer
                 text_size = cv2.getTextSize(text_to_add, font, font_scale, thickness)[0]
                 text_width, text_height = text_size[0], text_size[1]
