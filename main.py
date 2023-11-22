@@ -42,9 +42,11 @@ def image_transformation(operation):
                 # Sauvegarde de l'image transformé
                 save_picture(image_noir_et_blanc, modify_picture, image_name)
                 
+                # Retour l'état final à l'utilisateur
                 print("\nL'image a bien été transformée. \n")
                 ls_modify_pic()
             else:
+                # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
 
@@ -61,9 +63,11 @@ def image_transformation(operation):
                 # Sauvegarde de l'image transformé
                 save_picture(image_blur, modify_picture, image_name)
 
+                # Retour l'état final à l'utilisateur
                 print("\nL'image a bien été transformée.")
                 ls_modify_pic()
             else:
+                # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
 
@@ -83,9 +87,11 @@ def image_transformation(operation):
                 # Sauvegarde de l'image transformé
                 cv2.imwrite(f'{modify_picture}/{image_name}', image_dilated)
 
+                # Retour l'état final à l'utilisateur
                 print("\nL'image a bien été transformée.")
                 ls_modify_pic()
             else:
+                # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
 
@@ -99,10 +105,15 @@ def image_transformation(operation):
             if image is not None:
                 # Faire pivoter l'image
                 image_rotate = image.rotate(int(value_rotate))
-                image_rotate.save(f'{modify_picture}/{image_name}')
+
+                # Sauvegarde de l'image transformé
+                save_picture(image_rotate,modify_picture,image_name)
+                
+                # Retour l'état final à l'utilisateur
                 print("\nL'image a bien été transformée.")
                 ls_modify_pic()
             else:
+                # Retour erreur
                 print("\nImpossible de charger l'image. Veuillez vérifier le nom du fichier.")
                 ls_original_pic()
 
@@ -110,6 +121,7 @@ def image_transformation(operation):
         # elif operation == "...":
         
         else:
+            # Retour erreur commande
             print("\nOpération non reconnue.")
 
     except Exception as e:
