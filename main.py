@@ -231,6 +231,7 @@ input_folder=''
 filters=''
 output_folder = ''
 help = False
+err_commande = False
 
 # Récupère l'index des arguments de la commande
 for cli_name_pic in arguments:
@@ -239,9 +240,15 @@ for cli_name_pic in arguments:
 
     if cli_name_pic == '--i':
         input_folder = f"./{arguments[x+1]}/"
+        if not os.path.exists(input_folder):
+            print(f"\nLe dossier de destination n'existe pas, verifier le nom.\n")
+            err_commande = True
 
     if cli_name_pic == '--o':
         output_folder = f"./{arguments[x+1]}/"
+        if not os.path.exists(output_folder):
+            print(f"\nLe dossier de destination n'existe pas, verifier le nom.\n")
+            err_commande = True
         
     if cli_name_pic == '--help':
         help = True
@@ -254,7 +261,8 @@ if help:
                 "\n"
     print(help_msg)
 else:
-    try:
-        image_transformation(filters, input_folder, output_folder)
-    except:
-        print("\nLa commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
+    if not err_commande :
+        try:
+            image_transformation(filters, input_folder, output_folder)
+        except:
+            print("\nLa commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
