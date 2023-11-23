@@ -255,26 +255,28 @@ for cli_name_pic in arguments:
         config_cmd = read_file_lines(f"./{arguments[x+1]}")
         config_cmd[0] = config_cmd[0].replace('\n', '')
         configs = True
+
         for config in config_cmd:
             config_arg = config.split(' ')
-            print(config_arg)
+            y = 0
             for check_arg in config_arg:
-                print(check_arg)
-                # if check_arg == '--filters':
-                #     filters = check_arg[x+1]
+                if check_arg == '--filters':
+                    filters = config_arg[y+1]
 
-                # if check_arg == '--i':
-                #     input_folder = f"./{check_arg[x+1]}/"
-                #     if not os.path.exists(input_folder):
-                #         print_and_log_msg(f"Le dossier source n'existe pas, verifier le nom.\n")
-                #         err_commande = True
+                if check_arg == '--i':
+                    input_folder = f"./{config_arg[y+1]}/"
+                    if not os.path.exists(input_folder):
+                        print_and_log_msg(f"Le dossier source n'existe pas, verifier le nom.\n")
+                        err_commande = True
 
-                # if check_arg == '--o':
-                #     output_folder = f"./{check_arg[x+1]}/"
-                #     if not os.path.exists(output_folder):
-                #         print_and_log_msg(f"Le dossier de destination n'existe pas, verifier le nom.\n")
-                #         err_commande = True
-            print([filters,input_folder,output_folder,])
+                if check_arg == '--o':
+                    output_folder = f"./{config_arg[y+1]}/"
+                    if not os.path.exists(output_folder):
+                        print_and_log_msg(f"Le dossier de destination n'existe pas, verifier le nom.\n")
+                        err_commande = True
+                y += 1
+            # execute les filtres pour chaque ligne du config.txt
+            image_transformation(filters, input_folder, output_folder)
     else :
         if cli_name_pic == '--filters':
             filters = arguments[x+1]
@@ -310,6 +312,7 @@ if help:
 else:
     if not err_commande :
         try:
-            image_transformation(filters, input_folder, output_folder)
+            if not configs:
+                image_transformation(filters, input_folder, output_folder)
         except:
             print_and_log_msg("La commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
