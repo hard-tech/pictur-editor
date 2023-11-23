@@ -1,12 +1,20 @@
-from PIL import Image
 from PIL import Image, ImageFilter
 import cv2
 import logger
 import numpy as np
 import os
 import sys
+from datetime import datetime
 
 arguments = sys.argv
+
+# Fonction qui afficher & log les message d'erreur
+def print_and_log_msg(err_message):
+    maintenant = datetime.now()
+    time = maintenant.strftime("%Y-%m-%d %H:%M:%S")
+    logger.log(time)
+    print(f"\n{err_message}")
+    logger.log(err_message)
 
 def image_transformation(filters,input_folder:str,output_picture:str):
 
@@ -19,26 +27,17 @@ def image_transformation(filters,input_folder:str,output_picture:str):
     image_names = cat_folder_element(input_folder)
     operation = filters.split('&')
 
-    def ls_original_pic():
-        try:
-            fichiers = os.listdir(original_picture)
-            print(f'\nListe des fichiers dans {original_picture} :\n')
-            for fichier in fichiers:
-                print(fichier)
-        except:
-            print(f'Imposible de lister les fichier contenue dans : {original_picture}\n')
-
     def save_picture(object, path, name):
         try:
             object.save(f'{path}{name}')
         except:
-            print(f"\nImpossible de sauvegarder l'image.\n")
+            print_and_log_msg(f"Impossible de sauvegarder l'image.\n")
 
     def load_picture(picture_name):
         try:
             image = Image.open(f'{original_picture}{picture_name}')
         except:
-            print(f"\nImpossible de charger l'image.\n")
+            print_and_log_msg(f"Impossible de charger l'image '{picture_name}'.\n")
         return image
 
     
@@ -47,8 +46,8 @@ def image_transformation(filters,input_folder:str,output_picture:str):
         i = 0
 
         if image_name.split('.')[1] == 'jpeg':
-            print("\n---- ### Erreur format fichier ### ----\n")
-            print(f"La modification de l'image '{image_name}' n'est pas supporter avec le format JPEG.\n")
+            print_and_log_msg("---- ### Erreur format fichier ### ----\n")
+            print_and_log_msg(f"La modification de l'image '{image_name}' n'est pas supporter avec le format JPEG.\n")
         else :
             # Pour chaque paramètre appliquer à l'image ...
             for param_filter in operation:
@@ -62,7 +61,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                 try:
                     # -- Story 1  -- #
                     if param_filter == "convert_black_and_white":
-                        print("\n---- ### Noir & Blanc ### ----\n")
+                        print_and_log_msg("---- ### Noir & Blanc ### ----\n")
                         # Charge l'image
                         image = load_picture(image_name)
 
@@ -74,14 +73,14 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             save_picture(image_noir_et_blanc, modify_picture, image_name)
                             
                             # Retour l'état final à l'utilisateur
-                            print(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
+                            print_and_log_msg(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
                         except :
                             # Retour erreur
-                            print(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+                            print_and_log_msg(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 2  -- #
                     elif param_filter == "convert_blur":
-                        print("\n---- ### Floutage ### ----\n")
+                        print_and_log_msg("---- ### Floutage ### ----\n")
                         # Charge l'image
                         image = load_picture(image_name)
                         
@@ -94,14 +93,14 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             save_picture(image_blur, modify_picture, image_name)
 
                             # Retour l'état final à l'utilisateur
-                            print(f"L'image '{image_name}' a bien été floutée.\n")
+                            print_and_log_msg(f"L'image '{image_name}' a bien été floutée.\n")
                         except :
                             # Retour erreur
-                            print(f"Impossible de floutée l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                            print_and_log_msg(f"Impossible de floutée l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 3  -- #
                     elif param_filter == "dilate_image":
-                        print("\n---- ### Dilatation ### ----\n")
+                        print_and_log_msg("---- ### Dilatation ### ----\n")
                         # Charge l'image
                         image = load_picture(image_name)
                         
@@ -119,15 +118,15 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             cv2.imwrite(f'{modify_picture}{image_name}', image_dilated)
 
                             # Retour l'état final à l'utilisateur
-                            print(f"L'image '{image_name}' a bien été dilate\n")
+                            print_and_log_msg(f"L'image '{image_name}' a bien été dilate\n")
                         except :
                             # Retour erreur
-                            print(f"Impossible de dilaté l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                            print_and_log_msg(f"Impossible de dilaté l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 4  -- #
                     elif param_filter == f"convert_rotate:{param_filter.split(':')[1]}":
                         
-                        print("\n---- ### Rotation ### ----\n")
+                        print_and_log_msg("---- ### Rotation ### ----\n")
                         # Faire pivoter l'image
                         value_rotate = param_filter.split(':')[1]
                         # Charge l'image
@@ -141,15 +140,15 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             save_picture(image_rotate,modify_picture,image_name)
                             
                             # Retour l'état final à l'utilisateur
-                            print(f"L'image '{image_name}' a bien été tournée de {value_rotate}°.\n")
+                            print_and_log_msg(f"L'image '{image_name}' a bien été tournée de {value_rotate}°.\n")
                         except :
                             # Retour erreur
-                            print(f"Impossible d'effectuer une rotation de {value_rotate}° sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                            print_and_log_msg(f"Impossible d'effectuer une rotation de {value_rotate}° sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 5  -- #
                     elif param_filter == f"convert_resize:{param_filter.split(':')[1]}":
 
-                        print("\n---- ### Redimensionnement ### ----\n")
+                        print_and_log_msg("---- ### Redimensionnement ### ----\n")
                         # Demander la nouvelle taille de l'image
                         scaling = param_filter.split(':')[1]
                         scaling = float(scaling)
@@ -167,16 +166,15 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             cv2.imwrite(f'{modify_picture}/{image_name}', image_resize)
 
                             # Retour l'état final à l'utilisateur
-                            print(f"La taille de l'image '{image_name}' a bien été modifiée.\n")
+                            print_and_log_msg(f"La taille de l'image '{image_name}' a bien été modifiée.\n")
                             # logger.log('une erreur s\'est produite lors de l\'execution de la demande' + '\n')
                         except :
-                            print(f"Impossible de charger l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
-                            ls_original_pic()
+                            print_and_log_msg(f"Impossible de redimentioner l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 6  -- #
                     elif param_filter == f"add_text:{param_filter.split(':')[1]}":
                         
-                        print("\n---- ### Redimensionnement ### ----\n")
+                        print_and_log_msg("---- ### Redimensionnement ### ----\n")
                         # Demmander ce que l'utilisateur écrire sur l'image
                         text_param = param_filter.split(':')[1]
                         text_to_add = text_param
@@ -210,19 +208,18 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             cv2.imwrite(f'{modify_picture}{image_name}', image_with_text)
                             
                             # Retour l'état final à l'utilisateur
-                            print(f"Le texte à bien été ajouter sur l'image '{image_name}'.\n")
+                            print_and_log_msg(f"Le texte à bien été ajouter sur l'image '{image_name}'.\n")
                         except :
                             # Retour erreur
-                            print(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
+                            print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     else:
                         # Retour erreur commande
-                        print("\n---- ### Erreur opération non reconnue ### ----\n")
-                        print(f"Opération non reconnue : ({param_filter}) tapper --help pour plus d'information\n")
+                        print_and_log_msg("---- ### Erreur opération non reconnue ### ----\n")
+                        print_and_log_msg(f"Opération non reconnue : ({param_filter}) tapper --help pour plus d'information\n")
 
                 except:
-                    print(f"\nUne erreur c'est produite lors de la transformation d'un fichier.\n")
-                    ls_original_pic()
+                    print_and_log_msg(f"Une erreur c'est produite lors de l'éxécution du filtre sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
                 i+=1
 
 
@@ -242,13 +239,13 @@ for cli_name_pic in arguments:
     if cli_name_pic == '--i':
         input_folder = f"./{arguments[x+1]}/"
         if not os.path.exists(input_folder):
-            print(f"\nLe dossier de destination n'existe pas, verifier le nom.\n")
+            print_and_log_msg(f"Le dossier source n'existe pas, verifier le nom.\n")
             err_commande = True
 
     if cli_name_pic == '--o':
         output_folder = f"./{arguments[x+1]}/"
         if not os.path.exists(output_folder):
-            print(f"\nLe dossier de destination n'existe pas, verifier le nom.\n")
+            print_and_log_msg(f"Le dossier de destination n'existe pas, verifier le nom.\n")
             err_commande = True
         
     if cli_name_pic == '--help':
@@ -256,14 +253,14 @@ for cli_name_pic in arguments:
     x+=1
 
 if help:
-    help_msg = "\nLes fonction sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier qui détermine de combien {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXT TO ADD)\n\n Selection multible avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
+    help_msg = "Les fonction sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier qui détermine de combien {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXT TO ADD)\n\n Selection multible avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
                 " --i 'original_picture' (Nom du dossier contenant les images à modifier)\n\n"\
                 " --o 'modify_picture' (Nom du dossier qui contiendra les images modifier)\n"\
                 "\n"
-    print(help_msg)
+    print_and_log_msg(help_msg)
 else:
     if not err_commande :
         try:
             image_transformation(filters, input_folder, output_folder)
         except:
-            print("\nLa commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
+            print_and_log_msg("La commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")

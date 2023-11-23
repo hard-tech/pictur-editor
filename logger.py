@@ -1,10 +1,6 @@
 logFile = 'command.log'
 
 def log(msg):
-    """
-    
-    """
-
     with open(logFile, 'a') as f:
         f.write(msg + '\n')
 
