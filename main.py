@@ -16,6 +16,15 @@ def print_and_log_msg(err_message):
     print(f"\n{err_message}")
     logger.log(err_message)
 
+def read_file_lines(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            return lines
+    except FileNotFoundError:
+        print(f"Le fichier {file_path} n'existe pas.")
+        return []
+
 def image_transformation(filters,input_folder:str,output_picture:str):
 
     def cat_folder_element(folder):
@@ -230,7 +239,7 @@ filters=''
 output_folder = ''
 help = False
 err_commande = False
-
+configs = False
 # Récupère l'index des arguments de la commande
 for cli_name_pic in arguments:
     if cli_name_pic == '--filters':
@@ -247,20 +256,42 @@ for cli_name_pic in arguments:
         if not os.path.exists(output_folder):
             print_and_log_msg(f"Le dossier de destination n'existe pas, verifier le nom.\n")
             err_commande = True
-        
+    
+    if cli_name_pic == '--config':
+        config_cmd = read_file_lines(f"./{arguments[x+1]}")
+        configs = True
+
     if cli_name_pic == '--help':
         help = True
     x+=1
 
 if help:
     help_msg = "Les fonction sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier qui détermine de combien {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXT TO ADD)\n\n Selection multible avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
+                " --config 'config.txt' (Nom du fichier contenant les commande à executer)\n    - Les commandes doivent impérativement respecter la forme : \n       (--filters filterName1&filterName2:param --i source_name_fold --o destination_name_fold) \n\n"\
                 " --i 'original_picture' (Nom du dossier contenant les images à modifier)\n\n"\
                 " --o 'modify_picture' (Nom du dossier qui contiendra les images modifier)\n"\
                 "\n"
     print_and_log_msg(help_msg)
 else:
     if not err_commande :
-        try:
-            image_transformation(filters, input_folder, output_folder)
-        except:
-            print_and_log_msg("La commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
+        if configs :
+            for config in config_cmd:
+                index = 0
+                config_table = config.split(' ')
+                for filter_param in config_table :
+                    if filter_param == '--filters':
+                        filters = config_table[index+1]
+                    if filter_param == '--i':
+                        input_folder = f"./{config_table[index+1]}/"
+                    if filter_param == '--o':
+                        output_folder = f"./{config_table[index+1]}/"
+                    try:
+                        image_transformation(filters, input_folder, output_folder)
+                    except:
+                        print_and_log_msg("La commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")
+                    index += 1
+        else:
+            try:
+                image_transformation(filters, input_folder, output_folder)
+            except:
+                print_and_log_msg("La commande n'a pas été reconnue, tapper '--help' pour plus d'information.\n")

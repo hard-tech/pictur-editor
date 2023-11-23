@@ -1,0 +1,2 @@
+--filters convert_rotate:50 --i original_picture --o modify_picture
+--filters image_noir_et_blanc&add_text:LOL --i original_picture --o modify_picture
