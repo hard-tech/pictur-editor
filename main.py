@@ -12,8 +12,8 @@ arguments = sys.argv
 def print_and_log_msg(err_message):
     maintenant = datetime.now()
     time = maintenant.strftime("%Y-%m-%d %H:%M:%S")
-    logger.log(time)
     print(f"\n{err_message}")
+    logger.log(time)
     logger.log(err_message)
 
 # Fonction pour renvoyer toutes les lignes contenues dans un fichier sous la forme d'un tableau.
@@ -23,7 +23,7 @@ def read_file_lines(file_path):
             lines = file.readlines()
             return lines
     except FileNotFoundError:
-        print(f"Le fichier {file_path} n'existe pas.")
+        print_and_log_msg(f"Le fichier {file_path} n'existe pas.")
         return []
 
 # Fonction de transformation d'image
@@ -63,8 +63,8 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
         # Vérifier si le format de l'image est un 'jpeg' car ce format s'adapte mal à certaines modifications
         if image_name.split('.')[1] == 'jpeg':
-            print_and_log_msg("---- ### Erreur format fichier ### ----")
-            print_and_log_msg(f"La modification de l'image '{image_name}' n'est pas supportée avec le format JPEG.\n")
+            print_and_log_msg("---- ### Format fichier potentielemtn problématique ### ----\n")
+            print_and_log_msg(f"La modification de l'image '{image_name}' peu ne pas être supportée à cause du format JPEG.\n")
         else:
             # Pour chaque paramètre appliqué à l'image ...
             for param_filter in operation:
@@ -93,11 +93,13 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Sauvegarde de l'image transformée
                             save_picture(image_noir_et_blanc, modify_picture, image_name)
-
+                            
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
+
                         except:
                             # Retourner une erreur
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible de transformer l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètres (--help).\n")
 
                     # -- Story 2 : Appliquer un filtre de flou sur l'image -- #
@@ -115,8 +117,10 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"L'image '{image_name}' a bien été floutée.\n")
+
                         except:
                             # Retourner une erreur
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible de flouter l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
                     # -- Story 3 : Appliquer un filtre de dilatation sur l'image -- #
@@ -139,8 +143,10 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"L'image '{image_name}' a bien été dilatée\n")
+
                         except:
                             # Retourner une erreur
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible de dilater l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
                     # -- Story 4 : Appliquer une rotation sur d'un angle donné sur l'image -- #
@@ -161,8 +167,10 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"L'image '{image_name}' a bien été tournée de {value_rotate}°.\n")
+
                         except:
                             # Retourner une erreur
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible d'effectuer une rotation de {value_rotate}° sur l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
                     # -- Story 5 : Appliquer un redimensionnement de l'image avec une valeur donnée -- #
@@ -186,7 +194,9 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"La taille de l'image '{image_name}' a bien été modifiée.\n")
+                            
                         except:
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible de redimensionner l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
                     # -- Story 6 : Appliquer l'ajout du texte donné en paramètre sur l'image -- #
@@ -226,19 +236,19 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
                             # Retourner l'état final à l'utilisateur
                             print_and_log_msg(f"Le texte a bien été ajouté sur l'image '{image_name}'.\n")
+                            
                         except:
                             # Retourner une erreur
+                            print_and_log_msg("---- ### Erreur filtre ### ----\n")
                             print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
                     else:
                         # Retourner une erreur de commande
                         print_and_log_msg("---- ### Erreur opération non reconnue ### ----\n")
                         print_and_log_msg(f"Opération non reconnue : ({param_filter}) taper --help pour plus d'informations\n")
-
                 except:
                     print_and_log_msg(f"Une erreur s'est produite lors de l'exécution du filtre sur l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
                 i += 1
-
 
 # Initialisation des variables
 x = 0
