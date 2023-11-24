@@ -73,7 +73,7 @@ def image_transformation(filters, input_folder: str, output_picture: str):
             if i >= 1:
                 original_picture = modify_picture
             else:
-                # Vérifie si une image existe déjà dans modify_picture (path),
+                # Vérifie si une image existe déjà dans modify_picture (path)
                 # pour appliquer à nouveau le filtre sur l'image déjà modifiée
                 if os.path.exists(f"{modify_picture}{image_name}"):
                     original_picture = modify_picture
@@ -288,7 +288,9 @@ for cli_name_pic in arguments:
         config_cmd[0] = config_cmd[0].replace('\n', '')
         config_cmd[1] = config_cmd[1].replace('\n', '')
 
+        # Parcour les config dans le fichier config.txt
         for config in config_cmd:
+            print(config)
             config_arg = config.split(' ')
             y = 0
             # Récupération de l'index des arguments des commandes (une à une) de config.txt
@@ -309,6 +311,7 @@ for cli_name_pic in arguments:
                         print_and_log_msg(f"Le dossier de destination n'existe pas, veuillez vérifier le nom.\n")
                         err_commande = True
                 y += 1
+    
     else:
         if cli_name_pic == '--filters':
             filters = arguments[x+1]
@@ -331,10 +334,9 @@ for cli_name_pic in arguments:
 
 if help_needed:
     help_msg = "Les fonctions disponibles sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier déterminant l'échelle {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXTE À AJOUTER)\n\n Sélection multiple avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
-                " --config 'config.txt' (Nom du fichier contenant les commandes à exécuter)\n    - Les commandes doivent impérativement respecter le format : \n       (--filters nomDuFiltre1&nomDuFiltre2:param --i nomDossierSource --o nomDossierDestination) \n\n"\
                 " --i 'dossier_source' (Nom du dossier contenant les images à modifier)\n\n"\
-                " --o 'dossier_destination' (Nom du dossier qui contiendra les images modifiées)\n"\
-                "\n"
+                " --o 'dossier_destination' (Nom du dossier qui contiendra les images modifiées)\n\n"\
+                " --config 'config.txt' (Nom du fichier contenant les commandes à exécuter)\n     - Le fichier config.txt doivent impérativement respecter le format : \n       \n       filters = Filtres\n       input = Dossier source\n       output = Dossier de destination \n\n"
     print_and_log_msg(help_msg)
 else:
     if not err_commande:
