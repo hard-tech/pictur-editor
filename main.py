@@ -63,7 +63,7 @@ def image_transformation(filters, input_folder: str, output_picture: str):
 
         # Vérifier si le format de l'image est un 'jpeg' car ce format s'adapte mal à certaines modifications
         if image_name.split('.')[1] == 'jpeg':
-            print_and_log_msg("---- ### Erreur format fichier ### ----\n")
+            print_and_log_msg("---- ### Erreur format fichier ### ----")
             print_and_log_msg(f"La modification de l'image '{image_name}' n'est pas supportée avec le format JPEG.\n")
         else:
             # Pour chaque paramètre appliqué à l'image ...
