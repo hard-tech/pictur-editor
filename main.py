@@ -229,6 +229,26 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             # Retour erreur
                             print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
+                    # -- Story 14  -- #   
+                    elif param_filter == "convert_aquaraelle":
+                        print_and_log_msg("---- ### Filtre Aquarelle ### ----\n")
+                        
+                        # Charge l'image
+                        image = load_picture(image_name)
+                        
+                        try:
+                            # Convertir l'image en noir et blanc
+                            watercolor_image = cv2.stylization(image, sigma_s=60, sigma_r=0.6)
+
+                            # Sauvegarde de l'image transformé
+                            save_picture(watercolor_image, modify_picture, image_name)
+                            
+                            # Retour l'état final à l'utilisateur
+                            print_and_log_msg(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
+                        except :
+                            # Retour erreur
+                            print_and_log_msg(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+
                     else:
                         # Retour erreur commande
                         print_and_log_msg("---- ### Erreur opération non reconnue ### ----\n")
