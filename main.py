@@ -245,42 +245,40 @@ x = 0
 input_folder = ''
 filters = ''
 output_folder = ''
-help = False
+help_needed = False
 err_commande = False
 configs = False
 
 # Récupération de l'index des arguments de la commande
 for cli_name_pic in arguments:
     if cli_name_pic == '--config':
-        print('configs')
-
         config_cmd = read_file_lines(f"./{arguments[x+1]}")
+
+        # Retrait des '\n' des paramètres
         config_cmd[0] = config_cmd[0].replace('\n', '')
-        configs = True
+        config_cmd[1] = config_cmd[1].replace('\n', '')
 
         for config in config_cmd:
             config_arg = config.split(' ')
             y = 0
             # Récupération de l'index des arguments des commandes (une à une) de config.txt
             for check_arg in config_arg:
-                if check_arg == '--filters':
-                    filters = config_arg[y+1]
+                if check_arg == 'filters':
+                    filters = config_arg[y+2]
 
                 # Vérification si l'argument correspond à --i du tableau pour pouvoir
-                if check_arg == '--i':
-                    input_folder = f"./{config_arg[y+1]}/"
+                if check_arg == 'input':
+                    input_folder = f"./{config_arg[y+2]}/"
                     if not os.path.exists(input_folder):
                         print_and_log_msg(f"Le dossier source n'existe pas, veuillez vérifier le nom.\n")
                         err_commande = True
 
-                if check_arg == '--o':
-                    output_folder = f"./{config_arg[y+1]}/"
+                if check_arg == 'output':
+                    output_folder = f"./{config_arg[y+2]}/"
                     if not os.path.exists(output_folder):
                         print_and_log_msg(f"Le dossier de destination n'existe pas, veuillez vérifier le nom.\n")
                         err_commande = True
                 y += 1
-            # exécute les filtres pour chaque ligne du config.txt
-            image_transformation(filters, input_folder, output_folder)
     else:
         if cli_name_pic == '--filters':
             filters = arguments[x+1]
@@ -298,10 +296,10 @@ for cli_name_pic in arguments:
                 err_commande = True
 
         if cli_name_pic == '--help':
-            help = True
+            help_needed = True
     x += 1
 
-if help:
+if help_needed:
     help_msg = "Les fonctions disponibles sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier déterminant l'échelle {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXTE À AJOUTER)\n\n Sélection multiple avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
                 " --config 'config.txt' (Nom du fichier contenant les commandes à exécuter)\n    - Les commandes doivent impérativement respecter le format : \n       (--filters nomDuFiltre1&nomDuFiltre2:param --i nomDossierSource --o nomDossierDestination) \n\n"\
                 " --i 'dossier_source' (Nom du dossier contenant les images à modifier)\n\n"\
@@ -311,7 +309,6 @@ if help:
 else:
     if not err_commande:
         try:
-            if not configs:
-                image_transformation(filters, input_folder, output_folder)
+            image_transformation(filters, input_folder, output_folder)
         except:
             print_and_log_msg("La commande n'a pas été reconnue, tapez '--help' pour plus d'informations.\n")
