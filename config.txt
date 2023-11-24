@@ -1,0 +1,3 @@
+filters = convert_black_and_white
+input = original_picture
+output = modify_picture
