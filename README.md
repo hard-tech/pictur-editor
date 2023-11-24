@@ -5,7 +5,7 @@ Cet outil Python permet de réaliser différentes transformations sur des images
 ## Prérequis
 
 - Python 3.x
-- Bibliothèques requises : Pillow (PIL) et OpenCV (`pip install pillow opencv-python`)
+- Bibliothèques requises : Pillow (PIL) et OpenCV (`pip install -r requirements.txt`)
 
 ## Structure des Dossiers
 
@@ -14,19 +14,21 @@ Cet outil Python permet de réaliser différentes transformations sur des images
 
 ## Comment Utiliser
 
-1. Placez les images que vous souhaitez transformer dans le dossier `original_picture/`.
-2. Exécutez le script en ligne de commande et suivez les instructions.
+- Exécutez le script en ligne de commande et suivez les instructions.
 
-## Commandes Disponibles
+## Filtres Disponibles
 
-- `convert_black_and_white`: Convertit une image en noir et blanc.
-- `convert_blur`: Applique un flou à une image.
-- `dilate_image`: Dilate une image.
-- `convert_rotate`: Fait pivoter une image.
-- `convert_resize`: Redimensionne une image.
-- `add_text`: Ajoute du texte à une image.
+- `convert_black_and_white`: Convertit l'image en noir et blanc.
+- `convert_blur`: Applique un effet de flou à l'image.
+- `dilate_image`: Effectue une dilatation de l'image.
+- `convert_rotate`: Rotation de l'image.
+  - Paramètre : `angl` (angle de rotation).
+- `convert_resize`: Redimensionne l'image.
+  - Paramètre : `Nombre entier` (détermine l'échelle de modification).
+- `add_text`: Ajoute du texte à l'image.
+  - Paramètre : `TEXTE À AJOUTER`.
 
 ## Exemple d'Utilisation
 
 ```bash
-python image_transform.py convert_black_and_white
+python3 main.py --filters "convert_black_and_white&add_text:LL" --i original_picture --o modify_picture
