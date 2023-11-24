@@ -1,2 +1,3 @@
---filters convert_rotate:180 --i original_picture --o modify_picture
---filters convert_black_and_white&add_text:KILL/PY --i original_picture --o modify_picture
+filters = convert_rotate:180
+input = original_picture
+output = modify_picture
