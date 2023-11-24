@@ -245,7 +245,7 @@ x = 0
 input_folder = ''
 filters = ''
 output_folder = ''
-help = False
+help_needed = False
 err_commande = False
 configs = False
 
@@ -254,11 +254,9 @@ for cli_name_pic in arguments:
     if cli_name_pic == '--config':
         config_cmd = read_file_lines(f"./{arguments[x+1]}")
 
-        # retirer les \n des paramètre
+        # Retrait des '\n' des paramètres
         config_cmd[0] = config_cmd[0].replace('\n', '')
         config_cmd[1] = config_cmd[1].replace('\n', '')
-
-        print(config_cmd)
 
         for config in config_cmd:
             config_arg = config.split(' ')
@@ -298,10 +296,10 @@ for cli_name_pic in arguments:
                 err_commande = True
 
         if cli_name_pic == '--help':
-            help = True
+            help_needed = True
     x += 1
 
-if help:
+if help_needed:
     help_msg = "Les fonctions disponibles sont : \n\n --filters \n   'convert_black_and_white'\n   'convert_blur'\n   'dilate_image'\n   'convert_rotate'\n     - param (convert_rotate:angl)\n   'convert_resize'\n     - param (convert_resize:Nombre entier déterminant l'échelle {>1 multiplie par X et <1 divise par X})\n   'add_text'\n     - param (add_text:TEXTE À AJOUTER)\n\n Sélection multiple avec [&] --> (exemple : 'convert_blur&convert_black_and_white')\n\n"\
                 " --config 'config.txt' (Nom du fichier contenant les commandes à exécuter)\n    - Les commandes doivent impérativement respecter le format : \n       (--filters nomDuFiltre1&nomDuFiltre2:param --i nomDossierSource --o nomDossierDestination) \n\n"\
                 " --i 'dossier_source' (Nom du dossier contenant les images à modifier)\n\n"\
