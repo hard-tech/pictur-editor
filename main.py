@@ -5,6 +5,7 @@ import numpy as np
 import os
 import sys
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 arguments = sys.argv
 
@@ -230,7 +231,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 14  -- #   
-                    elif param_filter == "convert_aquaraelle":
+                    elif param_filter == "convert_aquarelle":
                         print_and_log_msg("---- ### Filtre Aquarelle ### ----\n")
                         
                         # Charge l'image
@@ -248,6 +249,40 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                         except :
                             # Retour erreur
                             print_and_log_msg(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+
+                    # -- Story 16  -- #
+                    elif param_filter == "detection_face":
+                        print_and_log_msg("---- ### detection du visage ### ----\n")
+                        try :
+                            # Charge l'image
+                            image = load_picture(image_name)
+                        
+
+                            # Conversion de l'image en niveaux de gris
+                            gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+                            # Chargement du classificateur en cascade pour la détection de visages
+                            face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+                            # Détection des visages dans l'image en niveaux de gris
+                            face = face_classifier.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40))
+
+                            # Dessine des rectangles autour des visages détectés dans l'image originale
+                            for (x, y, w, h) in face:
+                                cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
+
+                            # Conversion de l'image de l'espace de couleur BGR à RGB pour l'affichage avec matplotlib
+                            img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+                            # Affichage de l'image résultante avec les rectangles entourant les visages
+                            plt.figure(figsize=(20,10))
+                            plt.imshow(img_rgb)
+                            plt.axis('off')
+                            plt.show()
+
+                        except Exception as e:
+                                # Gestion des exceptions, affichage de l'erreur
+                                print(f"Une erreur s'est produite lors de la detection du visage : {e}")
 
                     else:
                         # Retour erreur commande
