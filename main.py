@@ -242,26 +242,60 @@ def image_transformation(filters, input_folder: str, output_picture: str):
                         print_and_log_msg("---- ### Erreur filtre ### ----\n")
                         print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètres (--help).\n")
 
-                # -- Story 14  -- #   
-                elif param_filter == "convert_aquarelle":
-                    print_and_log_msg("---- ### Filtre Aquarelle ### ----\n")
+                # # -- Story 14  -- #   
+                # elif param_filter == "convert_aquarelle":
+                #     print_and_log_msg("---- ### Filtre Aquarelle ### ----\n")
                     
-                    # Charge l'image
-                    image = load_picture(image_name)
+                #     # Charge l'image
+                #     image = load_picture(image_name)
                     
-                    try:
-                        # Convertir l'image en noir et blanc
-                        watercolor_image = cv2.stylization(image, sigma_s=60, sigma_r=0.6)
+                #     try:
+                #         # Convertir l'image en noir et blanc
+                #         watercolor_image = cv2.stylization(image, sigma_s=60, sigma_r=0.6)
 
-                        # Sauvegarde de l'image transformé
-                        save_picture(watercolor_image, modify_picture, image_name)
+                #         # Sauvegarde de l'image transformé
+                #         save_picture(watercolor_image, modify_picture, image_name)
                         
-                        # Retour l'état final à l'utilisateur
-                        print_and_log_msg(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
-                    except :
-                        # Retour erreur
-                        print_and_log_msg(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+                #         # Retour l'état final à l'utilisateur
+                #         print_and_log_msg(f"L'image '{image_name}' a bien été transformée en noir et blanc.\n")
+                #     except :
+                #         # Retour erreur
+                #         print_and_log_msg(f"Impossible de transformée l'image '{image_name}' en noir et blanc. Veuillez vérifier les paramètre (--help).\n")
+                
+                ## -- Story 16  -- #
+                # elif param_filter == "detection_face":
+                    # print_and_log_msg("---- ### detection du visage ### ----\n")
+                    # try :
+                    #     # Charge l'image
+                    #     image = load_picture(image_name)
+                    
 
+                    #     # Conversion de l'image en niveaux de gris
+                    #     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+                    #     # Chargement du classificateur en cascade pour la détection de visages
+                    #     face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+                    #     # Détection des visages dans l'image en niveaux de gris
+                    #     face = face_classifier.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40))
+
+                    #     # Dessine des rectangles autour des visages détectés dans l'image originale
+                    #     for (x, y, w, h) in face:
+                    #         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
+
+                    #     # Conversion de l'image de l'espace de couleur BGR à RGB pour l'affichage avec matplotlib
+                    #     img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+                    #     # Affichage de l'image résultante avec les rectangles entourant les visages
+                    #     plt.figure(figsize=(20,10))
+                    #     plt.imshow(img_rgb)
+                    #     plt.axis('off')
+                    #     plt.show()
+
+                    # except Exception as e:
+                    #         # Gestion des exceptions, affichage de l'erreur
+                    #         print(f"Une erreur s'est produite lors de la detection du visage : {e}")
+                    
                 else:
                     # Retourner une erreur de commande
                     print_and_log_msg("---- ### Erreur opération non reconnue ### ----\n")
