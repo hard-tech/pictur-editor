@@ -230,7 +230,7 @@ def image_transformation(filters,input_folder:str,output_picture:str):
                             print_and_log_msg(f"Impossible d'ajouter du texte sur l'image '{image_name}'. Veuillez vérifier les paramètre (--help).\n")
 
                     # -- Story 14  -- #   
-                    elif param_filter == "convert_aquaraelle":
+                    elif param_filter == "convert_aquarelle":
                         print_and_log_msg("---- ### Filtre Aquarelle ### ----\n")
                         
                         # Charge l'image
